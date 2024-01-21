@@ -8,6 +8,7 @@ package amqp091
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"sync"
 	"sync/atomic"
@@ -1488,7 +1489,7 @@ internal counter for DeliveryTags with the first confirmation starts at 1.
 Deprecated: Use PublishWithContext instead.
 */
 func (ch *Channel) Publish(exchange, key string, mandatory, immediate bool, msg Publishing) error {
-	_, err := ch.PublishWithDeferredConfirmWithContext(context.Background(), exchange, key, mandatory, immediate, msg)
+	_, err := ch.PublishWithDeferredConfirmWithContext(context.Background(), key, exchange, mandatory, immediate, msg)
 	return err
 }
 
@@ -1525,7 +1526,8 @@ When Publish does not return an error and the channel is in confirm mode, the
 internal counter for DeliveryTags with the first confirmation starts at 1.
 */
 func (ch *Channel) PublishWithContext(ctx context.Context, exchange, key string, mandatory, immediate bool, msg Publishing) error {
-	_, err := ch.PublishWithDeferredConfirmWithContext(ctx, exchange, key, mandatory, immediate, msg)
+	fmt.Println("my|PublishWithContext begin")
+	_, err := ch.PublishWithDeferredConfirmWithContext(ctx, key, exchange, mandatory, immediate, msg)
 	return err
 }
 
@@ -1538,7 +1540,7 @@ the DeferredConfirmation will be nil.
 Deprecated: Use PublishWithDeferredConfirmWithContext instead.
 */
 func (ch *Channel) PublishWithDeferredConfirm(exchange, key string, mandatory, immediate bool, msg Publishing) (*DeferredConfirmation, error) {
-	return ch.PublishWithDeferredConfirmWithContext(context.Background(), exchange, key, mandatory, immediate, msg)
+	return ch.PublishWithDeferredConfirmWithContext(context.Background(), key, exchange, mandatory, immediate, msg)
 }
 
 /*
@@ -1547,7 +1549,8 @@ DeferredConfirmation, allowing the caller to wait on the publisher confirmation
 for this message. If the channel has not been put into confirm mode,
 the DeferredConfirmation will be nil.
 */
-func (ch *Channel) PublishWithDeferredConfirmWithContext(ctx context.Context, exchange, key string, mandatory, immediate bool, msg Publishing) (*DeferredConfirmation, error) {
+func (ch *Channel) PublishWithDeferredConfirmWithContext(ctx context.Context, key, exchange string, mandatory, immediate bool, msg Publishing) (*DeferredConfirmation, error) {
+	fmt.Println("my|PublishWithDeferredConfirmWithContext begin")
 	if ctx == nil {
 		return nil, errors.New("amqp091-go: nil Context")
 	}
